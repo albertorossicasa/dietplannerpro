@@ -1,0 +1,9 @@
+﻿node_modules/
+.expo/
+android/
+ios/
+build/
+.DS_Store
+*.log
+*.apk
+*.zip

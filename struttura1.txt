@@ -1,0 +1,56 @@
+DietPlannerPro-Complete/
+├── App.js (già dato)
+├── app.json (già dato)
+├── eas.json (già dato)
+├── package.json (già dato)
+├── babel.config.js
+├── metro.config.js
+├── assets/
+│   ├── icon.png
+│   └── splash.png
+└── src/
+    ├── database/
+    │   └── Database.js (già dato)
+    ├── contexts/
+    │   └── AuthContext.js
+    ├── utils/
+    │   ├── colors.js
+    │   ├── constants.js
+    │   ├── helpers.js
+    │   ├── codiceFiscale.js
+    │   └── fabbisogno.js
+    ├── components/
+    │   ├── CustomButton.js
+    │   ├── LoadingSpinner.js
+    │   ├── SearchBar.js
+    │   ├── ClientCard.js
+    │   ├── FoodItem.js
+    │   └── MealCard.js
+    └── screens/
+        ├── LoginScreen.js
+        ├── DashboardScreen.js
+        ├── ClientsListScreen.js
+        ├── ClientDetailScreen.js
+        ├── AddClientScreen.js
+        ├── EditClientScreen.js
+        ├── FoodsListScreen.js
+        ├── AddFoodScreen.js
+        ├── DietScreen.js
+        ├── AddDietScreen.js
+        ├── AddMealScreen.js
+        ├── MonitoringScreen.js
+        ├── AddMonitoringScreen.js
+        ├── FotoProgressoScreen.js
+        ├── InvoicesScreen.js
+        ├── AddInvoiceScreen.js
+        ├── ListaSpesaScreen.js
+        ├── TrackingAcquaScreen.js
+        ├── CalcoloFabbisognoScreen.js
+        ├── AppuntamentiScreen.js
+        ├── AddAppuntamentoScreen.js
+        ├── ConsensoScreen.js
+        ├── ChatScreen.js
+        ├── BackupScreen.js
+        ├── ProfileScreen.js
+        ├── SettingsScreen.js
+        └── UtentiScreen.js

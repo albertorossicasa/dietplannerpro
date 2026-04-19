@@ -1,0 +1,29 @@
+{
+  "expo": {
+    "name": "DietPlannerPro",
+    "slug": "dietplannerpro",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.dietplannerpro.offline"
+    },
+    "android": {
+      "package": "com.dietplannerpro.offline",
+      "permissions": [
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
+      ]
+    },
+    "extra": {
+      "eas": {
+        "projectId": "daea8bd4-db5d-459a-9fed-09024f77ab55"
+      }
+    }
+  }
+}

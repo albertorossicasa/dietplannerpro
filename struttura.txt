@@ -1,0 +1,47 @@
+DietPlannerPro-Mobile-Standalone/
+├── App.js
+├── app.json
+├── eas.json
+├── package.json
+├── babel.config.js
+├── metro.config.js
+├── assets/
+│   ├── icon.png (placeholder)
+│   └── splash.png (placeholder)
+└── src/
+    ├── database/
+    │   ├── Database.js          ← Gestisce SQLite locale, crea tabelle, operazioni CRUD
+    │   └── initDatabase.js      ← Popola dati demo (clienti, alimenti, diete)
+    ├── contexts/
+    │   └── AuthContext.js       ← Gestione login (professionista unico)
+    ├── services/
+    │   └── StorageService.js    ← Salvataggio locale delle preferenze (AsyncStorage)
+    ├── utils/
+    │   ├── colors.js
+    │   ├── constants.js
+    │   └── helpers.js
+    ├── components/
+    │   ├── CustomButton.js
+    │   ├── LoadingSpinner.js
+    │   ├── SearchBar.js
+    │   ├── ClientCard.js
+    │   ├── FoodItem.js
+    │   └── MealCard.js
+    └── screens/
+        ├── LoginScreen.js
+        ├── DashboardScreen.js
+        ├── ClientsListScreen.js
+        ├── ClientDetailScreen.js
+        ├── AddClientScreen.js
+        ├── EditClientScreen.js
+        ├── FoodsListScreen.js
+        ├── AddFoodScreen.js
+        ├── DietScreen.js
+        ├── AddDietScreen.js
+        ├── AddMealScreen.js
+        ├── MonitoringScreen.js
+        ├── AddMonitoringScreen.js
+        ├── InvoicesScreen.js
+        ├── AddInvoiceScreen.js
+        ├── ProfileScreen.js
+        └── SettingsScreen.js
