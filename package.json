@@ -1,6 +1,6 @@
 {
-  "name": "dietplannerpro-offline",
-  "version": "1.0.0",
+  "name": "dietplannerpro",
+  "version": "1.0.1",
   "main": "expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
