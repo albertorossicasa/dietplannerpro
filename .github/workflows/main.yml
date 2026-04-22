@@ -1,57 +1,38 @@
 name: Build Android APK
-
 on:
   workflow_dispatch:
   push:
-    branches: [ main ]
-
+    branches: [main]
 jobs:
   build-android:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node 18
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: '18'
           cache: 'npm'
-
-      - name: Install deps
-        run: npm install --legacy-peer-deps
-
-      - name: Setup Java 17
-        uses: actions/setup-java@v4
+      - run: npm install --legacy-peer-deps
+      - uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
-
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
-
-      - name: Accept licenses + SDK 34
-        run: |
+      - uses: android-actions/setup-android@v3
+      - run: |
           yes | sdkmanager --licenses || true
           sdkmanager "platforms;android-34" "build-tools;34.0.0"
-
-      - name: Expo Prebuild (CLI locale)
-        run: ./node_modules/.bin/expo prebuild --platform android --clean
+      - run: ./node_modules/.bin/expo prebuild --platform android --clean
         env:
           CI: true
           EXPO_NO_TELEMETRY: 1
-
-      - name: Build APK
-        run: |
+      - run: |
           cd android
           chmod +x gradlew
           ./gradlew assembleDebug --no-daemon
         env:
           CI: true
           GRADLE_OPTS: "-Xmx4g"
-
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         if: success()
         with:
           name: DietPlannerPro-Debug-APK
