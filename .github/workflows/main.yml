@@ -6,32 +6,40 @@ on:
 jobs:
   build-android:
     runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: actions/setup-node@v4
-        with: { node-version: '18', cache: 'npm' }
+        with:
+          node-version: '20'
+          cache: 'npm'
       - run: npm install --legacy-peer-deps
       - uses: actions/setup-java@v4
-        with: { java-version: '17', distribution: 'temurin' }
+        with:
+          java-version: '11'
+          distribution: 'temurin'
       - uses: android-actions/setup-android@v3
       - run: |
           yes | sdkmanager --licenses || true
-          sdkmanager "platforms;android-34" "build-tools;34.0.0"
+          sdkmanager "platforms;android-33" "build-tools;33.0.2"
       - run: ./node_modules/.bin/expo prebuild --platform android --clean
-        env: { CI: true, EXPO_NO_TELEMETRY: 1 }
-      
-      # 🔧 FIX AGP/KOTLIN COMPATIBILITY (QUESTO RISOLVE L'ERRORE REALE)
-      - name: Fix AGP version in generated build.gradle
+        env:
+          CI: true
+          EXPO_NO_TELEMETRY: 1
+      - name: Bundle JavaScript for Release
         run: |
-          sed -i 's/classpath "com.android.tools.build:gradle:[^"]*"/classpath "com.android.tools.build:gradle:8.1.4"/g' android/build.gradle
-          sed -i 's/classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:[^"]*"/classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.10"/g' android/build.gradle
-          echo -e "\nandroid { publishing { singleVariant('release') { withSourcesJar() } } }" >> android/app/build.gradle
-      
+          mkdir -p android/app/src/main/assets
+          npx react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res
+        env:
+          CI: true
       - run: |
           cd android
           chmod +x gradlew
           ./gradlew assembleDebug --no-daemon
-        env: { CI: true, GRADLE_OPTS: "-Xmx4g" }
+        env:
+          CI: true
+          GRADLE_OPTS: "-Xmx4g"
       - uses: actions/upload-artifact@v4
         if: success()
         with:
