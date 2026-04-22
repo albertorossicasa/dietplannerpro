@@ -10,29 +10,46 @@ jobs:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
       - uses: actions/checkout@v5
+      
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'npm'
+      
       - run: npm install --legacy-peer-deps
+      
       - uses: actions/setup-java@v4
         with:
           java-version: '11'
           distribution: 'temurin'
-      - uses: android-actions/setup-android@v3
-      - run: |
-          yes | sdkmanager --licenses || true
-          sdkmanager "platforms;android-33" "build-tools;33.0.2"
+      
+      # 🔥 SDK Android già preinstallato nel runner - solo accetto licenze in modo sicuro
+      - name: Accept Android licenses
+        run: |
+          mkdir -p $ANDROID_HOME/licenses
+          echo -e "\n24333f8a63b6825ea9c5514f83c2829b004d1fee" > $ANDROID_HOME/licenses/android-sdk-license
+          echo -e "\n84831b9409646a918e30573bab4c9c91346d8abd" >> $ANDROID_HOME/licenses/android-sdk-license
+          echo -e "\nd975f751698a77b662f1254ddbeed3901e976f5a" >> $ANDROID_HOME/licenses/android-sdk-license
+      
+      # 🔥 Prebuild genera i file nativi Android
       - run: ./node_modules/.bin/expo prebuild --platform android --clean
         env:
           CI: true
           EXPO_NO_TELEMETRY: 1
+      
+      # 🔥 Genera il bundle JS DOPO prebuild (entry point corretto per Expo)
       - name: Bundle JavaScript for Release
         run: |
           mkdir -p android/app/src/main/assets
-          npx react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res
+          npx react-native bundle --platform android \
+            --dev false \
+            --entry-file node_modules/expo/AppEntry.js \
+            --bundle-output android/app/src/main/assets/index.android.bundle \
+            --assets-dest android/app/src/main/res
         env:
           CI: true
+      
+      # 🔥 Compila APK
       - run: |
           cd android
           chmod +x gradlew
@@ -40,6 +57,7 @@ jobs:
         env:
           CI: true
           GRADLE_OPTS: "-Xmx4g"
+      
       - uses: actions/upload-artifact@v4
         if: success()
         with:
