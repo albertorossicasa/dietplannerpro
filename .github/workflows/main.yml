@@ -9,16 +9,16 @@ jobs:
   build-android:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node.js 18
+      - name: Setup Node 18
         uses: actions/setup-node@v4
         with:
           node-version: '18'
           cache: 'npm'
 
-      - name: Install dependencies
+      - name: Install deps
         run: npm install --legacy-peer-deps
 
       - name: Setup Java 17
@@ -30,18 +30,18 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Accept licenses & install SDK 34
+      - name: Accept licenses + SDK 34
         run: |
           yes | sdkmanager --licenses || true
           sdkmanager "platforms;android-34" "build-tools;34.0.0"
 
-      - name: Expo Prebuild (usa CLI locale per evitare mismatch)
+      - name: Expo Prebuild (CLI locale)
         run: ./node_modules/.bin/expo prebuild --platform android --clean
         env:
           CI: true
           EXPO_NO_TELEMETRY: 1
 
-      - name: Build Debug APK
+      - name: Build APK
         run: |
           cd android
           chmod +x gradlew
@@ -50,7 +50,7 @@ jobs:
           CI: true
           GRADLE_OPTS: "-Xmx4g"
 
-      - name: Upload APK Artifact
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         if: success()
         with:
