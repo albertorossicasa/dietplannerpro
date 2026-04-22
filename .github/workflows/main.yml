@@ -9,29 +9,29 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-          cache: 'npm'
+        with: { node-version: '18', cache: 'npm' }
       - run: npm install --legacy-peer-deps
       - uses: actions/setup-java@v4
-        with:
-          java-version: '17'
-          distribution: 'temurin'
+        with: { java-version: '17', distribution: 'temurin' }
       - uses: android-actions/setup-android@v3
       - run: |
           yes | sdkmanager --licenses || true
           sdkmanager "platforms;android-34" "build-tools;34.0.0"
       - run: ./node_modules/.bin/expo prebuild --platform android --clean
-        env:
-          CI: true
-          EXPO_NO_TELEMETRY: 1
+        env: { CI: true, EXPO_NO_TELEMETRY: 1 }
+      
+      # 🔧 FIX AGP/KOTLIN COMPATIBILITY (QUESTO RISOLVE L'ERRORE REALE)
+      - name: Fix AGP version in generated build.gradle
+        run: |
+          sed -i 's/classpath "com.android.tools.build:gradle:[^"]*"/classpath "com.android.tools.build:gradle:8.1.4"/g' android/build.gradle
+          sed -i 's/classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:[^"]*"/classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.10"/g' android/build.gradle
+          echo -e "\nandroid { publishing { singleVariant('release') { withSourcesJar() } } }" >> android/app/build.gradle
+      
       - run: |
           cd android
           chmod +x gradlew
           ./gradlew assembleDebug --no-daemon
-        env:
-          CI: true
-          GRADLE_OPTS: "-Xmx4g"
+        env: { CI: true, GRADLE_OPTS: "-Xmx4g" }
       - uses: actions/upload-artifact@v4
         if: success()
         with:
